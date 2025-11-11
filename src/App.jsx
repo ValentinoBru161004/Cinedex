@@ -1,35 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Route, Switch } from "wouter";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import Home from "./pages/Home";
+import Movies from "./pages/Movies";
+import Login from "./pages/Login";
+import { lazy, Suspense } from "react";
+import SavedMovies from "./pages/SavedMovies";
+import Forum from "./pages/Forum";
 
-function App() {
-  const [count, setCount] = useState(0)
+const MovieDetail = lazy(() => import("./pages/MovieDetail"));
+const AdminPanel = lazy(() => import("./pages/AdminPanel"));
+const AddMovie = lazy(() => import("./pages/AddMovie"));
 
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="min-h-screen flex flex-col bg-linear-to-r from-[#870040] to-[#0D1B3D] text-white">
+      <Navbar />
 
-export default App
+      <main className="flex-1">
+        <Suspense fallback={<p className="p-4 text-center">Cargando...</p>}>
+          <Switch>
+            <Route path="/" component={Home} />
+            <Route path="/login" component={Login} />
+            <Route path="/movies" component={Movies} />
+            <Route path="/movies/:id" component={MovieDetail} />
+            <Route path="/admin" component={AdminPanel} />
+            <Route path="/add-movie" component={AddMovie} />
+            <Route path="/saved" component={SavedMovies} />
+            <Route path="/forum" component={Forum} />
+          </Switch>
+        </Suspense>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
